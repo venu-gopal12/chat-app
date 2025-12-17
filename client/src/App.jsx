@@ -15,7 +15,7 @@ function App() {
   const {authUser} = useContext(AuthContext);
   
   return (
-    <div className="bg-[url('./src/assets/bgImage.svg')] bg-contain ">
+    <div className=" h-screen overflow-hidden bg-[url('./src/assets/bgImage.svg')] bg-contain ">
       <Toaster/>
       <Routes>
         <Route path='/' element={authUser ? <HomePage/>:<Navigate to = "/login"/>} />

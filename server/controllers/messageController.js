@@ -11,12 +11,19 @@ export const getUsersForSidebar = async (req, res) => {
 
         //count unread messages 
         const unseenMessages = {};
-        const promises = filteredUsers.map(async (user) => {
-            const messages = await Message.find({ senderId: user._id, receiverId: userId, seen: false });
-            if(messages.length > 0) {
-                unseenMessages[user._id] = messages.length;
-            }
-        });
+
+const promises = filteredUsers.map(async (user) => {
+  const messages = await Message.find({
+    senderId: user._id,
+    receiverId: userId,
+    seen: false
+  });
+
+  if (messages.length > 0) {
+    unseenMessages[user._id.toString()] = messages.length; // ✅ FIX
+  }
+});
+
         await Promise.all(promises);
 
        // include success flag expected by client
@@ -44,7 +51,11 @@ export const getMessages = async (req, res) => {
             { senderId: selectedUserId, receiverId: myId, seen: false },
             { $set: { seen: true } }
         );
-        res.status(200).json(messages);
+       res.status(200).json({
+  success: true,
+  messages
+});
+
     } catch (error) {
         
         
@@ -78,7 +89,8 @@ export const sendMessage = async (req, res) => {
         const senderId = req.user.id;
         const receiverId  = req.params.id;
 
-        let imageUrl ;
+        let imageUrl = null;
+
         if(image) {
             const uploadResponse = await cloudinary.uploader.upload(image);
             imageUrl = uploadResponse.secure_url;
@@ -96,7 +108,8 @@ export const sendMessage = async (req, res) => {
         //emit the new message to receiver if online (align event name with client)
         const receiverSocketId = userSocketMap[receiverId];
         if (receiverSocketId) {
-            io.to(receiverSocketId).emit('receive-message', savedMessage);
+            io.to(receiverSocketId).emit('newMessage', savedMessage);
+
         }
 
         res.status(201).json({ success: true, message: savedMessage });

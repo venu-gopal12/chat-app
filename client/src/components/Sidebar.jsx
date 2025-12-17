@@ -28,10 +28,10 @@ const Sidebar = () => {
         } else {
             console.error('getUsers is not a function - ChatProvider may be missing or value not provided', getUsers);
         }
-    }, [onlineUsers, getUsers, authUser]);
+    }, [ authUser]);
 
     return (
-        <div className={`bg-[#8185B2]/10 h-full p-5 rounded-r-xl overflow-y-scroll
+        <div className={`bg-[#8185B2]/10 h-full p-5 rounded-r-xl overflow-y-auto
         text-white ${selectedUser ? 'max-md:hidden' : ''}`}>
          <div className='pb-5'>
             <div className='flex justify-between items-center '>
@@ -73,10 +73,14 @@ const Sidebar = () => {
                           ? <span className='text-green-400 text-xs'>online</span>
                           : <span className='text-neutral-400 text-xs'>offline</span>}
                     </div>
-                    { (unseenMessages?.[user._id] || 0) > 0 && (
-                      <p className='absolute top-4 right-4 text-xs h-5 w-5 flex justify-center
-                      items-center rounded-full bg-violet-500/50'>{unseenMessages[user._id]}</p>
-                    )}
+                    {selectedUser?._id !== user._id &&
+  (unseenMessages?.[user._id] || 0) > 0 && (
+    <p className="absolute top-4 right-4 text-xs h-5 w-5 flex justify-center
+    items-center rounded-full bg-violet-500/50">
+      {unseenMessages[user._id]}
+    </p>
+)}
+
                 </div>
             ))}
          </div>
