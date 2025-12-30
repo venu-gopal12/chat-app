@@ -35,7 +35,7 @@ State Management: React Context API .
 1. Clone the repository
 Bash
 
-git clone https://github.com/your-username/chat-app.git
+git clone https://github.com/venu-gopal12/chat-app.git
 cd chat-app
 2. Backend Setup
 Navigate to the server folder: cd server
